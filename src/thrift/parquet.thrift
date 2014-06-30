@@ -76,7 +76,72 @@ enum ConvertedType {
    * 2 digits over).
    */
   DECIMAL = 5;
-}
+  
+  /**
+   * A date value.
+   * 
+   * This is used to annotate an INT32 value.  The underlying INT32 stores a
+   * value equal to the number of days since unix epoch.  
+   */
+  DATE = 6;
+  
+  /**
+   * A time value.
+   * 
+   * This is used to annotate an INT32 value.  The underlying INT32 stores a 
+   * value equal to the number of milliseconds since midnight.  This value is
+   * stored independent of any particular timezone and it is up to the file
+   * reader or writer to determine the meaning of these milliseconds.  
+   */
+  TIME = 7;
+   
+   /** 
+    * A high precision time.
+    *
+    * This is used to annotate an INT64 value.  The underlying INT64 stores a
+    * value equal to the number of nanoseconds since midnight.  Like TIME, 
+    * this value is independent of any particular timezone.
+    */
+   FINETIME = 8;
+   
+   /**
+    * A date and time value
+    *
+    * This annotates an INT64 value.  The underlying INT64 stores the number
+    * of milliseconds since unix epoch.  In the case that time_zone is set on 
+    * the SchemaElement, this means all values in the this column should be 
+    * contextualized in that timezone.  In the case that no time_zone is 
+    * stored, the timezone of this data is up to the interpretation of reader
+    * of this file.
+    */
+   TIMESTAMP = 9;
+   
+   /**
+    * A date and time value that is stored with timezone information    
+    *
+    * This is stored as a FIXED_LEN_BYTE_ARRAY of length 10.  The first
+    * eight bytes of this data are stored as a little endian INT64 value
+    * representing the milliseconds since unix epoch.  The last 2 bytes
+    * together hold an unsigned little endian integer TimeZone enum value 
+    * corresponding to the timezone of each particular TIMESTAMP value
+    */
+   TIMESTAMPTZ = 10;
+   
+   /**
+    * A interval of time
+    *
+    * This type annotates data stored as a FIXED_LEN_BYTE_ARRAY of length 12
+    * This data is composed of three separate little endian unsigned
+    * integers.  Each stores a component of a duration of time.  The first
+    * integer identifies the number of months associated with the duration,
+    * the second identifies the number of days associated with the duration
+    * and the third identifies the number of milliseconds associated with 
+    * the provided duration.  This duration of time is independent of any
+    * particular timezone or date.
+    */
+   INTERVAL = 11;
+   
+  }
 
 /**
  * Representation of Schemas
